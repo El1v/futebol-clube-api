@@ -1,4 +1,5 @@
 import * as express from 'express';
+import teamRoutes from './api/routes/teamRoutes';
 
 class App {
   public app: express.Express;
@@ -7,7 +8,7 @@ class App {
     this.app = express();
 
     this.config();
-
+    this.app.use(teamRoutes);
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
   }
@@ -30,6 +31,6 @@ class App {
 }
 
 export { App };
-//
+
 // Essa segunda exportação é estratégica, e a execução dos testes de cobertura depende dela
 export const { app } = new App();
