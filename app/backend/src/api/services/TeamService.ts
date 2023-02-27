@@ -16,8 +16,6 @@ export default class TeamService implements ITeamService {
   async readById(id: number): Promise<Team> {
     const team = await this.model.findByPk(id);
     if (!team) {
-      console.log('entra no if');
-
       throw new IdNotFoundError(ID_NOT_FOUND);
     }
 
