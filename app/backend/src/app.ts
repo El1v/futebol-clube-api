@@ -1,6 +1,8 @@
+import 'express-async-errors';
 import * as express from 'express';
 import ErrorHandler from './api/middleware/ErrorHandler';
 import teamRoutes from './api/routes/teamRoutes';
+import userRoutes from './api/routes/userRoutes';
 
 class App {
   public app: express.Express;
@@ -28,11 +30,16 @@ class App {
   }
 
   private initRoutes(): void {
+    this.app.use(userRoutes);
     this.app.use(teamRoutes);
   }
 
-  private initMiddlewares() {
+  private initMiddlewares(): void {
     this.app.use(ErrorHandler.handle);
+    process.on('uncaughtException', (err) => {
+      console.error(err, 'Uncaught Exception thrown');
+      process.exit(1);
+    });
   }
 
   public start(PORT: string | number):void {

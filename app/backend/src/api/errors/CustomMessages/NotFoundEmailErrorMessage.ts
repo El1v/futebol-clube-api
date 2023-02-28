@@ -1,0 +1,3 @@
+const EMAIL_NOT_FOUND = 'EMAIL NOT FOUND';
+
+export default EMAIL_NOT_FOUND;

@@ -1,10 +1,9 @@
 import { ModelStatic } from 'sequelize';
 import Team from '../../database/models/TeamModel';
-import IdNotFoundError from '../errors/IdNotFoundError';
+import ID_NOT_FOUND from '../errors/CustomMessages/NotFoundErrorMessage';
+import NotFoundError from '../errors/NotFoundError';
 // import ITeam from '../interfaces/ITeam';
 import ITeamService from '../interfaces/ITeamService';
-
-const ID_NOT_FOUND = 'Id not found';
 
 export default class TeamService implements ITeamService {
   protected model: ModelStatic<Team> = Team;
@@ -15,9 +14,7 @@ export default class TeamService implements ITeamService {
 
   async readById(id: number): Promise<Team> {
     const team = await this.model.findByPk(id);
-    if (!team) {
-      throw new IdNotFoundError(ID_NOT_FOUND);
-    }
+    if (!team) throw new NotFoundError(ID_NOT_FOUND);
 
     return team;
   }
