@@ -1,4 +1,6 @@
 import * as jwt from 'jsonwebtoken';
+import INVALID_TOKEN from '../errors/CustomMessages/InvalidTokenMessage';
+import InvalidToken from '../errors/InvalidToken';
 import IJwt from '../interfaces/IJwt';
 import ITokenPayload from '../interfaces/ITokenPayload';
 
@@ -10,8 +12,13 @@ export default class JWT implements IJwt {
     return token;
   }
 
-  validateToken(token: string): ITokenPayload {
-    const payload = jwt.verify(token, this.jwtSecret) as ITokenPayload;
-    return payload;
+  async validateToken(token: string): Promise<string> {
+    console.log('entra aqui');
+    try {
+      const decryptedData = await jwt.verify(token, this.jwtSecret) as string;
+      return decryptedData;
+    } catch (error) {
+      throw new InvalidToken(INVALID_TOKEN);
+    }
   }
 }

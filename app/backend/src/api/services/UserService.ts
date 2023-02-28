@@ -2,7 +2,6 @@ import { ModelStatic } from 'sequelize';
 import bcrypt = require('bcryptjs');
 import User from '../../database/models/UserModel';
 import INVALID_FIELDS from '../errors/CustomMessages/InvalidLoginErrorMessage';
-import NotFoundError from '../errors/NotFoundError';
 import InvalidFieldsError from '../errors/InvalidFieldsError';
 import IUserService from '../interfaces/IUserService';
 import EMAIL_NOT_FOUND from '../errors/CustomMessages/NotFoundEmailErrorMessage';
@@ -29,5 +28,9 @@ export default class UserService implements IUserService {
 
   async readAll(): Promise<User[]> {
     return this.model.findAll();
+  }
+
+  async readByEmail(email: string): Promise<User | null> {
+    return this.model.findOne({ where: { email } });
   }
 }
