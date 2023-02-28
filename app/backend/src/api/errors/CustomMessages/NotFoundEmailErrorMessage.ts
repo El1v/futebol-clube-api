@@ -1,3 +1,3 @@
-const EMAIL_NOT_FOUND = 'EMAIL NOT FOUND';
+const EMAIL_NOT_FOUND = 'Invalid email or password';
 
 export default EMAIL_NOT_FOUND;

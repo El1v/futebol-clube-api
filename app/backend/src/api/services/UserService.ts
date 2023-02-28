@@ -8,6 +8,7 @@ import IUserService from '../interfaces/IUserService';
 import EMAIL_NOT_FOUND from '../errors/CustomMessages/NotFoundEmailErrorMessage';
 import InvalidEmailOrPassword from '../errors/InvalidEmailOrPassword';
 import INVALID_EMAIL_PASSWORD from '../errors/CustomMessages/InvalidEmailOrPasswordMessage';
+import EmailNotFoundError from '../errors/NotFoundEmailError';
 
 export default class UserService implements IUserService {
   protected model: ModelStatic<User> = User;
@@ -17,7 +18,7 @@ export default class UserService implements IUserService {
 
     const user = await this.model.findOne({ where: { email } });
 
-    if (!user) throw new NotFoundError(EMAIL_NOT_FOUND);
+    if (!user) throw new EmailNotFoundError(EMAIL_NOT_FOUND);
 
     const pass = await bcrypt.compare(password, user.password);
 
