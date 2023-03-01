@@ -22,4 +22,11 @@ export default class MatchService implements IMatchService {
       { where: { id } },
     );
   }
+
+  async update(id: number, homeTeamGoals: number, awayTeamGoals: number): Promise<void> {
+    await this.model.update(
+      { homeTeamGoals, awayTeamGoals },
+      { where: { id } },
+    );
+  }
 }
