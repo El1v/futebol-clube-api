@@ -1,6 +1,7 @@
 import { Router, Response, Request } from 'express';
 import MatchController from '../controllers/MatchController';
 import AuthUser from '../middleware/AuthUser';
+import ValidateTeamCreate from '../middleware/ValidateTeamCreate';
 import MatchService from '../services/MatchService';
 
 const matchService = new MatchService();
@@ -24,6 +25,7 @@ matchRoutes.patch(
 matchRoutes.post(
   '/matches',
   AuthUser.validateToken,
+  ValidateTeamCreate.validateFields,
   (req: Request, res: Response) => matchController.create(req, res),
 );
 
