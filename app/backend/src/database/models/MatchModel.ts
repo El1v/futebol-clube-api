@@ -1,4 +1,4 @@
-import { BOOLEAN, STRING, INTEGER, Model } from 'sequelize';
+import { BOOLEAN, INTEGER, Model } from 'sequelize';
 import db from '.';
 import Team from './TeamModel';
 // import OtherModel from './OtherModel';
@@ -59,10 +59,7 @@ Match.init({
   timestamps: false,
 });
 
-Match.belongsTo(Team, { foreignKey: 'home_team_id', as: 'homeTeamId' });
-Match.belongsTo(Team, { foreignKey: 'away_team_id', as: 'awayTeamId' });
-
-Team.belongsTo(Match, { foreignKey: 'home_team_id', as: 'homeTeamId' });
-Team.belongsTo(Match, { foreignKey: 'away_team_id', as: 'awayTeamId' });
+Match.belongsTo(Team, { foreignKey: 'home_team_id', as: 'homeTeam' });
+Match.belongsTo(Team, { foreignKey: 'away_team_id', as: 'awayTeam' });
 
 export default Match;
