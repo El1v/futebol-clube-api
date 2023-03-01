@@ -22,4 +22,13 @@ export default class UserController {
     const result = await this._service.readAll();
     return res.status(200).json(result);
   }
+
+  async getRole(req: Request, res: Response) {
+    const { payload } = req.body;
+
+    const result = await this._service.readByEmail(payload);
+    const role = result?.dataValues.role;
+
+    return res.status(200).json({ role });
+  }
 }

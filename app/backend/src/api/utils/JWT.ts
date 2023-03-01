@@ -13,7 +13,6 @@ export default class JWT implements IJwt {
   }
 
   async validateToken(token: string): Promise<string> {
-    console.log('entra aqui');
     try {
       const decryptedData = await jwt.verify(token, this.jwtSecret) as string;
       return decryptedData;

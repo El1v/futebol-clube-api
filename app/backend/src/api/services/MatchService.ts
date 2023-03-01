@@ -16,14 +16,10 @@ export default class MatchService implements IMatchService {
     return matches;
   }
 
-  async readFiltredMatches(inProgress: boolean): Promise<Match[]> {
-    const matches = await this.model.findAll({
-      where: { inProgress },
-      include: [
-        { model: Team, as: 'homeTeam', attributes: { exclude: ['id'] } },
-        { model: Team, as: 'awayTeam', attributes: { exclude: ['id'] } },
-      ],
-    });
-    return matches;
+  async finish(id: number): Promise<void> {
+    await this.model.update(
+      { inProgress: false },
+      { where: { id } },
+    );
   }
 }
