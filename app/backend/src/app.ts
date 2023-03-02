@@ -1,6 +1,7 @@
 import * as express from 'express';
 import 'express-async-errors';
 import ErrorHandler from './api/middleware/ErrorHandler';
+import leaderboardRoutes from './api/routes/leaderboardRoutes';
 import matchRoutes from './api/routes/matchRoutes';
 import teamRoutes from './api/routes/teamRoutes';
 import userRoutes from './api/routes/userRoutes';
@@ -34,6 +35,7 @@ class App {
     this.app.use(userRoutes);
     this.app.use(teamRoutes);
     this.app.use(matchRoutes);
+    this.app.use(leaderboardRoutes);
   }
 
   private initMiddlewares(): void {

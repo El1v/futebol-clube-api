@@ -9,11 +9,18 @@ export default class MatchService implements IMatchService {
 
   async readAll(): Promise<Match[]> {
     const matches = await this.model.findAll({
+      attributes: {
+        exclude: [
+          'home_team_id',
+          'away_team_id',
+        ],
+      },
       include: [
         { model: Team, as: 'homeTeam', attributes: { exclude: ['id'] } },
         { model: Team, as: 'awayTeam', attributes: { exclude: ['id'] } },
       ],
     });
+
     return matches;
   }
 
