@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import ILeaderboard from '../interfaces/ILeaderboard';
 import IMatch from '../interfaces/IMatch';
 import IMatchService from '../interfaces/IMatchService';
 import ITeam from '../interfaces/ITeam';
@@ -49,6 +50,14 @@ export default class LeaderboardController {
     return goals;
   }
 
+  public static goalsBalance(id: number, matches: IMatch[]): number {
+    const GP = this.goalsHome(id, matches);
+    const GC = this.goalsAway(id, matches);
+
+    const goalsBalance = GP - GC;
+    return goalsBalance;
+  }
+
   static totalLosses(id: number, matches: IMatch[]): number {
     let count = 0;
     matches.forEach((match) => {
@@ -79,20 +88,20 @@ export default class LeaderboardController {
     return count;
   }
 
-  // static totalDraws(id: number, matches: IMatch[]): number {
-  //   let count = 0;
-  //   matches.forEach((match) => {
-  //     if (match.homeTeamId === id && match.homeTeamGoals === match.awayTeamGoals) {
-  //       count += 1;
-  //     }
+  static totalDraws(id: number, matches: IMatch[]): number {
+    let count = 0;
+    matches.forEach((match) => {
+      if (match.homeTeamId === id && match.homeTeamGoals === match.awayTeamGoals) {
+        count += 1;
+      }
 
-  //     if (match.awayTeamId === id && match.awayTeamGoals === match.homeTeamGoals) {
-  //       count += 1;
-  //     }
-  //   });
+      if (match.awayTeamId === id && match.awayTeamGoals === match.homeTeamGoals) {
+        count += 1;
+      }
+    });
 
-  //   return count;
-  // }
+    return count;
+  }
 
   static totalPoints(id: number, matches: IMatch[]) : number {
     let totalPoints = 0;
@@ -109,22 +118,32 @@ export default class LeaderboardController {
     return totalPoints;
   }
 
+  static sortArray(status: ILeaderboard[]) {
+    const result = status.sort((a, b) => (
+      b.totalPoints - a.totalPoints
+      || b.totalVictories - a.totalVictories
+      || b.goalsBalance - a.goalsBalance
+      || b.goalsFavor - a.goalsFavor
+      || a.goalsOwn - b.goalsOwn
+    ));
+    return result;
+  }
+
   static getAllStatus(teams: ITeam[], matches: IMatch[]) {
     const result = teams.map((team) => {
-      const totalGames = LeaderboardController.totalGames(team.id as number, matches);
-      const totalPoints = LeaderboardController.totalPoints(team.id as number, matches);
-      const goalsHome = LeaderboardController.goalsHome(team.id as number, matches);
-      const goalsAway = LeaderboardController.goalsAway(team.id as number, matches);
-      const totalLosses = LeaderboardController.totalLosses(team.id as number, matches);
-      const totalVictories = LeaderboardController.totalVictories(team.id as number, matches);
+      const homeMatches = matches.filter(({ homeTeamId }) => homeTeamId === team.id);
+      const totalGames = LeaderboardController.totalGames(team.id as number, homeMatches);
+      const totalPoints = LeaderboardController.totalPoints(team.id as number, homeMatches);
       return { name: team.teamName,
         totalPoints,
         totalGames,
-        totalVictories,
-        totalDraws: Math.abs(totalGames - totalVictories - totalLosses),
-        totalLosses,
-        goalsFavor: goalsHome,
-        goalsOwn: goalsAway,
+        totalVictories: LeaderboardController.totalVictories(team.id as number, homeMatches),
+        totalDraws: LeaderboardController.totalDraws(team.id as number, homeMatches),
+        totalLosses: LeaderboardController.totalLosses(team.id as number, homeMatches),
+        goalsFavor: LeaderboardController.goalsHome(team.id as number, homeMatches),
+        goalsOwn: LeaderboardController.goalsAway(team.id as number, homeMatches),
+        goalsBalance: LeaderboardController.goalsBalance(team.id as number, homeMatches),
+        efficiency: ((totalPoints / (totalGames * 3)) * 100).toFixed(2),
       };
     });
     return result;
@@ -133,7 +152,12 @@ export default class LeaderboardController {
   async leaderboard(req: Request, res:Response) {
     const teams = await this._teamService.readAll();
     const matches = await this._matchService.readAll();
-    const leaderboardStatus = LeaderboardController.getAllStatus(teams, matches);
-    return res.status(200).json(leaderboardStatus);
+
+    const finalizedMatches = matches.filter((match) => match.inProgress === false);
+    const leaderboardStatus = LeaderboardController.getAllStatus(teams, finalizedMatches);
+
+    const sortLeaderboardStatus = LeaderboardController.sortArray(leaderboardStatus);
+
+    return res.status(200).json(sortLeaderboardStatus);
   }
 }
