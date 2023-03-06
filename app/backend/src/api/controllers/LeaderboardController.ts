@@ -150,27 +150,49 @@ export default class LeaderboardController {
     return result;
   }
 
+  static getLeaderboard(teams: ITeam[], matches: IMatch[]) {
+    const result = teams.map((team) => {
+      const totalGames = LeaderboardController.totalGames(team.id as number, matches);
+      const totalPoints = LeaderboardController.totalPoints(team.id as number, matches);
+      return { name: team.teamName,
+        totalPoints,
+        totalGames,
+        totalVictories: LeaderboardController.totalVictories(team.id as number, matches),
+        totalDraws: LeaderboardController.totalDraws(team.id as number, matches),
+        totalLosses: LeaderboardController.totalLosses(team.id as number, matches),
+        goalsFavor: LeaderboardController.goalsHome(team.id as number, matches),
+        goalsOwn: LeaderboardController.goalsAway(team.id as number, matches),
+        goalsBalance: LeaderboardController.goalsBalance(team.id as number, matches),
+        efficiency: ((totalPoints / (totalGames * 3)) * 100).toFixed(2),
+      };
+    });
+    return result;
+  }
+
+  async leaderboard(req: Request, res:Response) {
+    const teams = await this._teamService.readAll();
+    const matches = await this._matchService.readAll();
+    const finalizedMatches = matches.filter((match) => match.inProgress === false);
+    const leaderboardStatus = LeaderboardController.getLeaderboard(teams, finalizedMatches);
+    const sortLeaderboardStatus = LeaderboardController.sortArray(leaderboardStatus);
+    return res.status(200).json(sortLeaderboardStatus);
+  }
+
   async homeLeaderboard(req: Request, res:Response) {
     const teams = await this._teamService.readAll();
     const matches = await this._matchService.readAll();
-
     const finalizedMatches = matches.filter((match) => match.inProgress === false);
     const leaderboardStatus = LeaderboardController.getAllStatus(teams, finalizedMatches, true);
-
     const sortLeaderboardStatus = LeaderboardController.sortArray(leaderboardStatus);
-
     return res.status(200).json(sortLeaderboardStatus);
   }
 
   async awayLeaderboard(req: Request, res:Response) {
     const teams = await this._teamService.readAll();
     const matches = await this._matchService.readAll();
-
     const finalizedMatches = matches.filter((match) => match.inProgress === false);
     const leaderboardStatus = LeaderboardController.getAllStatus(teams, finalizedMatches, false);
-
     const sortLeaderboardStatus = LeaderboardController.sortArray(leaderboardStatus);
-
     return res.status(200).json(sortLeaderboardStatus);
   }
 }

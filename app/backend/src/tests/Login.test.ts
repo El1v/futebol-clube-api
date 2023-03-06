@@ -121,10 +121,9 @@ describe('Testes para a rota de Login/role', function() {
       password: "$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW"
     } as User;
     const message = "Token not found";
-
     //Action
     sinon.stub(Model, 'findOne').resolves(outputMock)
-    const response = await chai.request(app).get('/login/role').send(inputMock);
+    const response = await chai.request(app).get('/login/role').send({ Authorization: `${inputMock.authorization}` });
 
     //Assertion
     expect(response.body).to.be.deep.equal({ message });
