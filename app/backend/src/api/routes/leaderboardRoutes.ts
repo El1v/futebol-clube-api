@@ -12,6 +12,10 @@ const leaderboardRoutes = Router();
 
 leaderboardRoutes.get(
   '/leaderboard/home',
-  (req: Request, res: Response) => leaderboardController.leaderboard(req, res),
+  (req: Request, res: Response) => leaderboardController.homeLeaderboard(req, res),
+);
+leaderboardRoutes.get(
+  '/leaderboard/away',
+  (req: Request, res: Response) => leaderboardController.awayLeaderboard(req, res),
 );
 export default leaderboardRoutes;
