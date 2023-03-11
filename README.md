@@ -1,13 +1,14 @@
-# :construction: README customizado em construção ! :construction:
-<!-- Olá, Tryber!
-Esse é apenas um arquivo inicial para o README do seu projeto no qual você pode customizar e reutilizar todas as vezes que for executar o trybe-publisher.
+#  Futebol Clube API ! 
 
-Para deixá-lo com a sua cara, basta alterar o seguinte arquivo da sua máquina: ~/.student-repo-publisher/custom/_NEW_README.md
+### Projeto desenvolvido utilizando POO, Typescript, Node.js, Sequelize.
+> :warning: O frontend foi desenvolvido pela Trybe!
 
-É essencial que você preencha esse documento por conta própria, ok?
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
-:warning: IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
--->
+###### Neste projeto foi desenvolvido uma API para o gerenciamento de um campeonato utilizando os princípios REST !
+
+###### A API deve: 
+> - Validar o login de um usuário com JWT e bcrypt;
+> - Buscar todos os times e um time especificio pelo ID;
+> - Ler todas as partidas em andamentos e finalizadas;
+> - Alterar as partidas em andamentos; 
+> - Finalizar as partidas em andamento; 
+> - Criar uma tabela de classificação dos times.
