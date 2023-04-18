@@ -41,9 +41,9 @@ Adquiri essas habilidades ao desenvolver esse projeto:
 
 ## Preview da Aplicação
 
-| . | Diagrama de ER|
+| Home | Diagrama de ER|
 | :---: | :---: |
-| ![Home](./aplicacao-) | ![Home](./aplicacao-diagram-er.png) |
+| ![Home](./aplicacao.png) | ![Home](./aplicacao-diagram-er.png) |
 
 ## Instalando Dependências
 
